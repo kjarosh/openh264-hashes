@@ -1,3 +1,5 @@
 .venv/
 .idea/
 venv/
+links.json
+report.json

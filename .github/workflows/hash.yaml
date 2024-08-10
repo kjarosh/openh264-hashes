@@ -10,9 +10,19 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Run
         env:
           GH_TOKEN: ${{ github.token }}
         run: ./openh264_hash.py
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: links
+          path: links.json
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: report
+          path: report.json

@@ -16,7 +16,7 @@ OPENH264_REPO = 'cisco/openh264'
 URL_REGEX = re.compile(
     r'(http://ciscobinary.openh264.org/(libopenh264-[\d.]+-[a-z\d.-]+\.(so|dylib|dll|a))\.(bz2|signed\.md5\.txt|sig.bz2))')
 
-HASH_REGEX = re.compile(r'([0-9a-f]{32,})')
+MD5_HASH_REGEX = re.compile(r'([0-9a-f]{32})')
 
 
 def log(msg):
@@ -44,8 +44,8 @@ def unbz2(source, dest):
             dest.write(chunk)
 
 
-def read_hash(file):
-    hashes = HASH_REGEX.findall(Path(file).read_text())
+def read_md5_hash(file):
+    hashes = MD5_HASH_REGEX.findall(Path(file).read_text())
     if len(hashes) != 1:
         raise Exception(f'Expected one hash, found {len(hashes)} hashes')
     return hashes[0]
@@ -162,11 +162,8 @@ def main():
                 binary_sha512 = hash('sha512', path_binary)
 
                 if hash_type == 'md5':
-                    if binary_md5 != read_hash(path_md5):
+                    if binary_md5 != read_md5_hash(path_md5):
                         raise Exception(f'MD5 check failed for {filename}')
-                elif hash_type == 'sha1':
-                    if binary_sha1 != read_hash(path_sha1):
-                        raise Exception(f'SHA1 check failed for {filename}')
                 else:
                     file_report['issues'].append(f'no-checksum')
 
